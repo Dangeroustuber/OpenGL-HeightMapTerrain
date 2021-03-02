@@ -1,0 +1,87 @@
+
+include_directories("${PROJECT_SOURCE_DIR}/external/assimp")
+include_directories("${PROJECT_SOURCE_DIR}/external/glew")
+include_directories("${PROJECT_SOURCE_DIR}/external/glfw")
+include_directories("${PROJECT_SOURCE_DIR}/external/glm")
+include_directories("${PROJECT_SOURCE_DIR}/external/openal-soft-1.21.0")
+include_directories("${PROJECT_SOURCE_DIR}/external/stb_libraries")
+ 
+  
+# This is a test scene configuration  
+file(GLOB HEIGHTMAPSCENE_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/HeightMapScene/includes/*.h")
+file(GLOB HEIGHTMAPSCENE_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/HeightMapScene/source/*.cpp")
+
+add_executable(HeightMapScene "${HEIGHTMAPSCENE_SOURCE_FILES}" "${HEIGHTMAPSCENE_HEADER_FILES}" "HeightMapScene/heightmap.cpp")
+
+target_include_directories(HeightMapScene PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/HeightMapScene")
+target_compile_options(HeightMapScene PRIVATE ${COMPILER_WARNINGS_AND_ERRORS} ${COMPILER_SANITIZERS})
+target_compile_definitions(HeightMapScene PRIVATE GLEW_STATIC)
+
+target_link_libraries(
+    HeightMapScene 
+    PRIVATE libglew_static
+    glfw
+    glm
+    assimp 
+    stb_image
+    dr_waw
+    OpenAL
+    OpenGL::GL   
+    LibCore 
+    RenderModule)
+
+target_include_directories(
+                HeightMapScene 
+                PRIVATE
+                "${PROJECT_SOURCE_DIR}/MainModule/HeightMapScene/includes"
+                "${PROJECT_SOURCE_DIR}/RenderModule/includes"
+                "${PROJECT_SOURCE_DIR}/LibCore/includes")
+
+add_custom_command(TARGET HeightMapScene POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                                      ${PROJECT_SOURCE_DIR}/assets
+                                                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets)
+
+add_custom_command(TARGET HeightMapScene POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                                      ${PROJECT_SOURCE_DIR}/sounds
+                                                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sounds)
+
+
+
+# pacman 3d configuration
+file(GLOB PACMAN3D_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Pacman3D/includes/*.h")
+file(GLOB PACMAN3D_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Pacman3D/source/*.cpp")
+ 
+add_executable(Pacman3D "${PACMAN3D_SOURCE_FILES}" "${PACMAN3D_HEADER_FILES}" "Pacman3D/main.cpp")
+
+
+target_include_directories(Pacman3D PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Pacman3D")
+target_compile_options(Pacman3D PRIVATE ${COMPILER_WARNINGS_AND_ERRORS} ${COMPILER_SANITIZERS})
+target_compile_definitions(Pacman3D PRIVATE GLEW_STATIC)
+
+target_link_libraries(
+    Pacman3D 
+    PRIVATE libglew_static
+    glfw
+    glm 
+    assimp 
+    stb_image
+    dr_waw
+    OpenAL
+    OpenGL::GL 
+    LibCore 
+    RenderModule)
+
+target_include_directories(
+                Pacman3D 
+                PRIVATE
+                "${PROJECT_SOURCE_DIR}/MainModule/Pacman3D/includes"
+                "${PROJECT_SOURCE_DIR}/RenderModule/includes"
+                "${PROJECT_SOURCE_DIR}/LibCore/includes")
+
+add_custom_command(TARGET Pacman3D POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                                      ${PROJECT_SOURCE_DIR}/assets
+                                                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets)
+                                                       
+add_custom_command(TARGET Pacman3D POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                                      ${PROJECT_SOURCE_DIR}/sounds
+                                                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sounds)

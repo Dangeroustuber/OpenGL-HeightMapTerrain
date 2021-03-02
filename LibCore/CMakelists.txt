@@ -1,0 +1,43 @@
+file(GLOB LIBCORE_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h")
+file(GLOB LIBCORE_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+
+add_library(LibCore ${LIBCORE_SOURCE_FILES} ${LIBCORE_HEADER_FILES})
+
+target_compile_options(LibCore PRIVATE ${COMPILER_WARNINGS_AND_ERRORS} ${COMPILER_SANITIZERS})
+target_compile_definitions(LibCore PUBLIC _USE_MATH_DEFINES)
+target_include_directories(LibCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/includes")
+
+include_directories("${PROJECT_SOURCE_DIR}/external/assimp")
+include_directories("${PROJECT_SOURCE_DIR}/external/glew")
+include_directories("${PROJECT_SOURCE_DIR}/external/glfw")
+include_directories("${PROJECT_SOURCE_DIR}/external/glm")
+include_directories("${PROJECT_SOURCE_DIR}/external/openal-soft-1.21.0")
+include_directories("${PROJECT_SOURCE_DIR}/external/stb_libraries")
+ 
+target_link_libraries(
+    LibCore
+    PRIVATE 
+    libglew_static
+    glfw
+    glm
+    assimp
+    dr_waw
+    stb_image
+    OpenAL
+    OpenGL::GL)
+
+source_group(
+    TREE "${PROJECT_SOURCE_DIR}/LibCore/includes"
+    PREFIX "Header Files"
+    FILES ${LIBCORE_HEADER_FILES})
+
+source_group(
+    TREE "${PROJECT_SOURCE_DIR}/LibCore/source"
+    PREFIX "Source Files"
+    FILES ${LIBCORE_SOURCE_FILES})
+
+target_include_directories(
+                LibCore 
+                PRIVATE
+                "${PROJECT_SOURCE_DIR}/include"
+                "${PROJECT_SOURCE_DIR}/RenderModule/includes")
